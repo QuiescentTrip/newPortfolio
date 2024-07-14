@@ -6,6 +6,7 @@
 <svelte:head>
 	<title>Fabian Ø. Tangen</title>
 </svelte:head>
-
-<Title />
-<Projects />
+<div class="overflow-x-hidden">
+	<Title />
+	<Projects />
+</div>

@@ -27,7 +27,7 @@
 </div>
 <div class="content overflow-hidden py-20">
 	<div
-		class=" flex flex-col items-center gap-8 justify-center container mx-auto overflow-x-hidden text-center w-min"
+		class=" flex flex-col items-center gap-8 justify-center container mx-auto overflow-x-hidden text-center w-full lg:w-min"
 	>
 		<h1 class="h1">Other Projects</h1>
 		<p class="note">
@@ -36,7 +36,7 @@
 		</p>
 		<div class="flex flex-col gap-7">
 			{#each unimportant as project}
-				<div class="card rounded-xl p-2 w-[70vh]">
+				<div class="card rounded-xl p-2 w-full lg:w-[70vh]">
 					<h2 class="h2 card-header p-2">{project.title}</h2>
 					<div>
 						<div class="flex flex-row items-center justify-center">
