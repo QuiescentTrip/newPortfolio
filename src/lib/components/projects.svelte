@@ -4,10 +4,6 @@
 	const unimportant = projects.unimportant;
 </script>
 
-<svelte:head>
-	<title>Fabian Ø. Tangen — Projects</title>
-</svelte:head>
-
 <div class="h-screen w-screen flex lg:flex-row flex-col items-center">
 	{#each important as project}
 		<div class="group relative flex-1 h-full w-full">
@@ -19,7 +15,7 @@
 				></div>
 				<!-- Text overlay -->
 				<div class="relative flex items-center justify-center h-full z-10">
-					<h1 class="h1 bg-primary-900 p-2">{project.title}</h1>
+					<h1 class="h1 bg-primary-100 dark:bg-primary-900 p-2">{project.title}</h1>
 				</div>
 			</a>
 		</div>
