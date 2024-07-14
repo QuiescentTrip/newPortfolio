@@ -20,7 +20,7 @@
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup, AppBar } from '@skeletonlabs/skeleton';
+	import { storePopup, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
@@ -42,7 +42,7 @@
 			{/if}
 		{/each}
 	</div>
-	<svelte:fragment slot="trail">(actions)</svelte:fragment>
+	<svelte:fragment slot="trail"><div class="mr-3"><LightSwitch /></div></svelte:fragment>
 </AppBar>
 
 <slot />

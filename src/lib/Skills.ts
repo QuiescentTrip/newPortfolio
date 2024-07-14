@@ -1,7 +1,8 @@
 const skills = {
-	programming: ['Node.js', 'TypeScript', 'React.js', 'Svelte', 'SvelteKit', 'Electron', 'Rust', 'Java'],
+	programming: ['TypeScript', 'ReactJS', 'SvelteKit', 'Electron', 'Rust', 'Java', 'Bash', 'C'],
+	datasecurity: ['Web', 'Cryptogrophy', 'Game-hacking'],
 	// devops: [],
-	databases: ['PostgreSQL','MySQL'],
+	databases: ['PostgreSQL', 'MySQL', 'SQLite'],
 	// tools: [],
 	languages: ['Norwegian', 'English'],
 	other: ['Inclusive Design']

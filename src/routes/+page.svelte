@@ -43,10 +43,14 @@
 			<h2 class="h2">My socials:</h2>
 
 			<div class="logo-cloud grid-cols-1 lg:!grid-cols-3 gap-1">
-				<a class="logo-item" href="https://github.com/QuiescentTrip">
+				<a class="logo-item" target="_blank" href="https://github.com/QuiescentTrip">
 					<span><IconBrandGithub size="48" /></span>
 				</a>
-				<a class="logo-item" href="https://www.linkedin.com/in/fabian-tangen-2047b3255/">
+				<a
+					class="logo-item"
+					target="_blank"
+					href="https://www.linkedin.com/in/fabian-tangen-2047b3255/"
+				>
 					<span>
 						<IconBrandLinkedin size="48" />
 					</span>

@@ -21,7 +21,7 @@
 {#if article && article.ok}
 	<div class="content overflow-x-hidden overflow-y-scroll pt-40 pb-40">
 		<div
-			class="w-[70vh] flex flex-col items-center gap-8 justify-center container mx-auto overflow-x-hidden"
+			class="w-min flex flex-col items-center gap-8 justify-center container mx-auto overflow-x-hidden"
 		>
 			<h1 class="h1">
 				<a class="btn h1" href={article.url} target="_blank" rel="noreferrer">{article.title} </a>
