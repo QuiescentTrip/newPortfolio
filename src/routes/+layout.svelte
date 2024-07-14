@@ -25,7 +25,7 @@
 </script>
 
 <AppBar
-	class="fixed w-screen"
+	class="fixed w-screen z-50"
 	gridColumns="grid-cols-3"
 	slotDefault="place-self-center"
 	slotTrail="place-content-end"
@@ -33,7 +33,7 @@
 	<svelte:fragment slot="lead"
 		><a class="btn" href="/"> <p class="h2">Fabian Tangen</p></a></svelte:fragment
 	>
-	<div class="flex gap-4">
+	<div class="gap-4 lg:flex hidden">
 		{#each routes as route}
 			{#if $page.route.id == route.href}
 				<p>{route.label}</p>

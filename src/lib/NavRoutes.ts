@@ -4,10 +4,6 @@ const routes = [
 		label: 'Home'
 	},
 	{
-		href: '/projects',
-		label: 'Projects'
-	},
-	{
 		href: '/about',
 		label: 'About'
 	},
