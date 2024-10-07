@@ -41,6 +41,12 @@ const projects = {
 	],
 	unimportant: [
 		{
+			title: 'Instagram Clone',
+			technologies: ['React', 'NextJS', 'ASP.NET', 'ShadCN', 'SQLite'],
+			description: 'Instagram clone, where frontend and backend was written from scratch',
+			url: 'https://github.com/QuiescentTrip/webapp-social'
+		},
+		{
 			title: 'This website',
 			technologies: ['SvelteKit', 'SkeletonUI'],
 			description: 'Will be regularly changed',
