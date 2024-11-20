@@ -1,10 +1,9 @@
 <script lang="ts">
-	import {
-		IconBrandLinkedin,
-		IconBrandGithub,
-		IconMail,
-		IconArrowBadgeDownFilled
-	} from '@tabler/icons-svelte';
+	import IconBrandLinkedin from '@tabler/icons-svelte/icons/brand-linkedin';
+	import IconBrandGithub from '@tabler/icons-svelte/icons/brand-github';
+	import IconMail from '@tabler/icons-svelte/icons/mail';
+	import IconArrowBadgeDownFilled from '@tabler/icons-svelte/icons/arrow-badge-down-filled';
+
 	import { popup, clipboard } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { slide } from 'svelte/transition';
