@@ -2,6 +2,7 @@
 	import IconBrandLinkedin from '@tabler/icons-svelte/icons/brand-linkedin';
 	import IconBrandGithub from '@tabler/icons-svelte/icons/brand-github';
 	import IconMail from '@tabler/icons-svelte/icons/mail';
+	import IconArticle from '@tabler/icons-svelte/icons/article';
 	import IconArrowBadgeDownFilled from '@tabler/icons-svelte/icons/arrow-badge-down-filled';
 
 	import { popup, clipboard } from '@skeletonlabs/skeleton';
@@ -44,19 +45,15 @@
 			<div class="space-y-5 items-center">
 				<h1 class="h1">Hello! I'm Fabian</h1>
 				<p>I'm a computer nerd from Norway</p>
-				<h2 class="h2">My socials:</h2>
+				<h2 class="h2">More stuff:</h2>
 
 				<div class="logo-cloud grid-cols-1 lg:!grid-cols-3 gap-1">
 					<a class="logo-item" target="_blank" href="https://github.com/QuiescentTrip">
 						<span><IconBrandGithub size="48" /></span>
 					</a>
-					<a
-						class="logo-item"
-						target="_blank"
-						href="https://www.linkedin.com/in/fabian-tangen-2047b3255/"
-					>
+					<a class="logo-item" target="_blank" href="https://blog.fabiantangen.no">
 						<span>
-							<IconBrandLinkedin size="48" />
+							<IconArticle size="48" />
 						</span>
 					</a>
 					<a href="/" class="logo-item" use:popup={popupFeatured}
