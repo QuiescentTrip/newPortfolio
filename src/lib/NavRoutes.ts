@@ -8,7 +8,7 @@ const routes = [
 		label: 'About'
 	},
 	{
-		href: '/blog',
+		href: 'https://blog.fabiantangen.no',
 		label: 'Blog'
 	}
 ];
