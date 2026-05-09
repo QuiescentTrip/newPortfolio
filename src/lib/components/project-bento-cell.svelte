@@ -2,6 +2,7 @@
 	import { revealOnScroll } from '$lib/actions/revealOnScroll';
 	import type { Project } from '$lib/Projects';
 	import { cubicOut } from 'svelte/easing';
+	import { tick } from 'svelte';
 	import { fly } from 'svelte/transition';
 
 	type Props = {
@@ -13,21 +14,65 @@
 	let { project, featured, revealIndex = 0 }: Props = $props();
 
 	let revealed = $state(false);
+	let featuredHovered = $state(false);
+	let titleWrapEl: HTMLDivElement | undefined = $state();
+	let featuredTitleEl: HTMLHeadingElement | undefined = $state();
+	/** Pixel offset to vertically center featured title (md+); avoids `top: 50%` while the wrap height changes. */
+	let featuredTitleCenterY = $state(0);
+
+	function measureFeaturedTitleCenter() {
+		if (!featured || !titleWrapEl || !featuredTitleEl || featuredHovered) return;
+		if (typeof window === 'undefined' || window.innerWidth < 768) {
+			featuredTitleCenterY = 0;
+			return;
+		}
+		const wrapH = titleWrapEl.clientHeight;
+		const titleH = featuredTitleEl.offsetHeight;
+		featuredTitleCenterY = Math.max(0, (wrapH - titleH) / 2);
+	}
+
+	$effect(() => {
+		if (!featured) {
+			featuredHovered = false;
+			featuredTitleCenterY = 0;
+		}
+	});
+
+	$effect(() => {
+		if (!featured || !revealed || !titleWrapEl) return;
+		const ro = new ResizeObserver(() => {
+			if (!featuredHovered) measureFeaturedTitleCenter();
+		});
+		ro.observe(titleWrapEl);
+		return () => ro.disconnect();
+	});
+
+	$effect(() => {
+		if (!featured || !revealed || featuredHovered) return;
+		tick().then(measureFeaturedTitleCenter);
+	});
 
 	const spanClass = $derived(
 		featured
-			? 'md:col-span-2 md:row-span-2 min-h-[13rem] md:min-h-[16rem]'
+			? 'col-span-2 row-span-2 min-h-[13rem] md:min-h-[16rem]'
 			: 'min-h-[10rem] md:h-[11rem] md:max-h-[11rem]'
 	);
 
 	const titleWrapClass = $derived(
 		featured
-			? 'flex min-h-0 flex-1 flex-col items-center justify-center max-md:items-start max-md:justify-start md:group-hover:items-start md:group-hover:justify-start md:group-hover:pt-0'
+			? 'relative flex min-h-0 w-full flex-1 flex-col max-md:items-start max-md:justify-start md:block'
 			: 'flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:items-start max-md:justify-start md:group-hover:flex-none md:group-hover:max-h-0 md:group-hover:opacity-0 md:group-hover:overflow-hidden'
 	);
 
-	const descOuterClass =
-		'grid translate-y-0 opacity-100 transition-[grid-template-rows,opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid-rows-[1fr] md:grid-rows-[0fr] md:translate-y-1 md:opacity-0 md:group-hover:grid-rows-[1fr] md:group-hover:translate-y-0 md:group-hover:opacity-100';
+	const descOuterClass = $derived(
+		featured
+			? `grid translate-y-0 opacity-100 transition-[grid-template-rows,opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid-rows-[1fr] max-md:translate-y-0 max-md:opacity-100 ${featuredHovered ? 'md:grid-rows-[1fr] md:translate-y-0 md:opacity-100' : 'md:grid-rows-[0fr] md:translate-y-1 md:opacity-0'}`
+			: 'grid translate-y-0 opacity-100 transition-[grid-template-rows,opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid-rows-[1fr] md:grid-rows-[0fr] md:translate-y-1 md:opacity-0 md:group-hover:grid-rows-[1fr] md:group-hover:translate-y-0 md:group-hover:opacity-100'
+	);
+
+	const featuredTitleClass = $derived(
+		`h2 line-clamp-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:left-0 md:top-0 md:z-10 md:transition-transform md:duration-[560ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] ${featuredHovered ? 'md:text-left' : 'md:text-center'} ${project.image ? 'text-white drop-shadow-md' : ''}`
+	);
 
 	const descPClass = $derived(
 		featured
@@ -41,6 +86,12 @@
 	target="_blank"
 	rel="noreferrer"
 	use:revealOnScroll={{ onReveal: () => (revealed = true) }}
+	onpointerenter={() => {
+		if (featured) featuredHovered = true;
+	}}
+	onpointerleave={() => {
+		featuredHovered = false;
+	}}
 	class="group card relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xl {spanClass}"
 >
 	{#if project.image}
@@ -62,12 +113,12 @@
 			class="relative z-10 flex h-full min-h-0 flex-1 flex-col p-3 sm:p-4 {project.image ? 'text-white' : 'text-token'}"
 			in:fly={{ y: 18, duration: 400, delay: revealIndex * 55, easing: cubicOut }}
 		>
-			<div class={titleWrapClass}>
+			<div class={titleWrapClass} bind:this={titleWrapEl}>
 				{#if featured}
 					<h2
-						class="h2 line-clamp-3 max-w-full px-1 text-center max-md:text-left transition-[margin,transform,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:mx-0 md:group-hover:mr-auto md:group-hover:text-left {project.image
-							? 'text-white drop-shadow-md'
-							: ''}"
+						class={featuredTitleClass}
+						bind:this={featuredTitleEl}
+						style:transform="translateY({featuredHovered ? 0 : featuredTitleCenterY}px)"
 					>
 						{project.title}
 					</h2>
