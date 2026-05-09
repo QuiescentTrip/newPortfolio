@@ -37,8 +37,11 @@
 	);
 
 	const featuredTitleClass = $derived(
-		`h2 line-clamp-3 pb-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:inset-x-0 md:top-0 md:z-10 md:mx-auto md:w-fit md:max-w-full md:translate-y-[calc(50cqh-50%)] md:text-center md:transition-[margin,transform] md:duration-[420ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:right-auto md:group-hover:mx-0 md:group-hover:translate-y-0 md:group-hover:text-left ${project.image ? 'text-white drop-shadow-md' : ''}`
+		`h2 line-clamp-3 pb-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:left-0 md:top-0 md:z-10 md:w-full md:translate-y-[calc(50cqh-50%)] md:text-center md:transition-transform md:duration-[420ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:translate-y-0 ${project.image ? 'text-white drop-shadow-md' : ''}`
 	);
+
+	const featuredTitleInnerClass =
+		`block max-md:inline md:block md:w-fit md:max-w-full md:text-center md:transition-transform md:duration-[420ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] md:translate-x-[calc(50cqw-50%)] md:group-hover:translate-x-0 md:group-hover:text-left`;
 
 	const descPClass = $derived(
 		featured
@@ -85,11 +88,19 @@
 			class="relative z-10 flex h-full min-h-0 min-w-0 flex-1 flex-col p-3 sm:p-4 [container-type:size] {project.image
 				? 'text-white'
 				: 'text-token'}"
-			in:fly|global={{ x: 0, y: 20, duration: 400, delay: revealIndex * 55, easing: cubicOut }}
+			in:fly|global={{
+				x: 0,
+				y: 22,
+				duration: 420,
+				delay: (revealIndex + 1) * 55,
+				easing: cubicOut
+			}}
 		>
 			<div class={titleWrapClass}>
 				{#if featured}
-					<h2 class={featuredTitleClass}>{project.title}</h2>
+					<h2 class={featuredTitleClass}>
+						<span class={featuredTitleInnerClass}>{project.title}</span>
+					</h2>
 				{:else}
 					<h3
 						class="h3 line-clamp-3 max-w-full px-1 text-center max-md:text-left transition-[margin,transform,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] {project.image

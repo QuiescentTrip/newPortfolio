@@ -1,7 +1,8 @@
 <script lang="ts">
 	import {
 		isPortfolioImageFailed,
-		normalizeAssetSrc
+		normalizeAssetSrc,
+		resolvedPortfolioImageSrc
 	} from '$lib/preloadPortfolioImages';
 
 	type Props = {
@@ -15,6 +16,7 @@
 	let { src, alt, imgClass = '', layout = 'fill' }: Props = $props();
 
 	const normalized = $derived(normalizeAssetSrc(src));
+	const displaySrc = $derived(resolvedPortfolioImageSrc(src));
 	const failedPreload = $derived(isPortfolioImageFailed(normalized));
 
 	let loaded = $state(false);
@@ -45,7 +47,7 @@
 		<div class="{fillShell} {placeholderClass}" aria-hidden="true"></div>
 		{#if !showBroken}
 			<img
-				src={normalized}
+				src={displaySrc}
 				alt={loaded ? alt : ''}
 				aria-hidden={loaded ? undefined : true}
 				loading="eager"
@@ -75,7 +77,7 @@
 				aria-hidden="true"
 			></div>
 			<img
-				src={normalized}
+				src={displaySrc}
 				alt={loaded ? alt : ''}
 				aria-hidden={loaded ? undefined : true}
 				loading="eager"

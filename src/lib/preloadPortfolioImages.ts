@@ -16,9 +16,18 @@ export const TITLE_GIF_PATH = '/images/giphy.gif';
 const preloadedOk = new Set<string>();
 const preloadedFailed = new Set<string>();
 
+/** One network fetch per path during the gate; `<img>` uses this so dev/prod don’t download twice. */
+const objectUrlByNormPath = new Map<string, string>();
+
 export function normalizeAssetSrc(src: string): string {
 	if (src.startsWith('./')) return `/${src.slice(2)}`;
 	return src;
+}
+
+/** Prefer blob URL from gate preload so the real `<img>` does not hit the network again. */
+export function resolvedPortfolioImageSrc(src: string): string {
+	const n = normalizeAssetSrc(src);
+	return objectUrlByNormPath.get(n) ?? n;
 }
 
 function recordPreloaded(url: string) {
@@ -96,25 +105,24 @@ export function getPortfolioImageUrls(): string[] {
 	];
 }
 
-/** Load + decode so bitmaps are ready before the first paint after the gate. */
+/** Fetch once per URL and keep a blob URL so mounted `<img>` tags don’t re-request (common in dev without cache headers). */
 export function preloadPortfolioImages(): Promise<void> {
 	const urls = getPortfolioImageUrls();
 	return Promise.all(
-		urls.map(
-			(url) =>
-				new Promise<void>((resolve) => {
-					const img = new Image();
-					img.onload = () => {
-						recordPreloaded(url);
-						recordPreloaded(img.src);
-						img.decode().then(resolve).catch(resolve);
-					};
-					img.onerror = () => {
-						recordFailed(url);
-						resolve();
-					};
-					img.src = url;
-				})
-		)
+		urls.map(async (url) => {
+			const n = normalizeAssetSrc(url);
+			try {
+				const res = await fetch(url);
+				if (!res.ok) {
+					recordFailed(url);
+					return;
+				}
+				const blob = await res.blob();
+				objectUrlByNormPath.set(n, URL.createObjectURL(blob));
+				recordPreloaded(url);
+			} catch {
+				recordFailed(url);
+			}
+		})
 	).then(() => {});
 }

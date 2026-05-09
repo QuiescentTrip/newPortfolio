@@ -1,8 +1,9 @@
 <script lang="ts">
 	/**
-	 * Load gate: bar motion is CSS (asymptotic crawl, stays under 75% until dismiss) so it runs on hard refresh as soon as styles paint.
-	 * JS only decides when to finish (fonts + window load + min time), then snaps bar full and fades.
+	 * Load gate: CSS bar; dismiss only after fonts, window load, portfolio image preloads, and min time.
+	 * Preload runs here so below-the-fold images are in cache when bento cells mount on scroll.
 	 */
+	import { preloadPortfolioImages } from '$lib/preloadPortfolioImages';
 	import { onMount } from 'svelte';
 
 	let show = $state(true);
@@ -54,7 +55,7 @@
 			}, remaining);
 		}
 
-		Promise.all([document.fonts.ready, windowLoad()])
+		Promise.all([document.fonts.ready, windowLoad(), preloadPortfolioImages()])
 			.then(whenReadyToDismiss)
 			.catch(whenReadyToDismiss);
 
