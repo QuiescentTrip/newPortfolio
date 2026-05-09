@@ -123,7 +123,7 @@
 				onclick={() => activateFromHref('/#top')}
 			>
 				<span
-					class="block text-left text-lg font-normal leading-tight text-token [font-family:var(--theme-font-family-heading)] sm:text-xl"
+					class="block text-left text-lg font-normal pb-1 leading-tight text-token [font-family:var(--theme-font-family-heading)] sm:text-xl"
 				>
 					Fabian Tangen
 				</span>
