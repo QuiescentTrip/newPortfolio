@@ -24,7 +24,7 @@ const projects: ProjectsCollection = {
 			title: 'BuddyUp',
 			technologies: ['SvelteKit', 'Capacitor', 'Pocketbase', 'SkeletonUI', 'KonstaUI'],
 			description: 'App where people can find or create activities near them',
-			url: 'https://www.buddyup.fabiantangen.no/',
+			url: 'https://buddyup.fabiantangen.no/',
 			image: './images/projects/buddyup.jpeg'
 		},
 		{
