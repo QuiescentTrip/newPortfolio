@@ -146,7 +146,7 @@
 							{project.description}
 						</p>
 						{#if featured}
-							<div class="mt-1.5 flex max-md:line-clamp-1 flex-wrap gap-0.5 md:mt-2 md:gap-1">
+							<div class="mt-1.5 flex flex-wrap gap-0.5 md:mt-2 md:gap-1">
 								{#each project.technologies as tech, i}
 									<span
 										class="chip variant-soft-primary text-xs {i >= 2 ? 'max-md:hidden' : ''}"
