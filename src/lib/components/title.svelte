@@ -20,7 +20,7 @@
 		event: 'click',
 		// Matches the data-popup value on your popup element
 		target: 'popupFeatured',
-		// Defines which side of your trigger the popup will appear
+		// Defines which side of the popup will appear
 		placement: 'bottom'
 	};
 	function onCopy() {
@@ -35,7 +35,10 @@
 	onMount(() => (visible = true));
 </script>
 
-<div class="flex justify-center items-center h-screen container mx-auto text-center lg:text-left">
+<div
+	id="top"
+	class="scroll-mt-24 flex h-screen items-center justify-center container mx-auto text-center lg:text-left"
+>
 	<div class="flex flex-col items-center">
 		<div class="flex flex-row">
 			<div class="hidden lg:block">

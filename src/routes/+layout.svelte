@@ -17,26 +17,13 @@
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import { storePopup } from '@skeletonlabs/skeleton';
 	import SiteFooter from '$lib/components/site-footer.svelte';
+	import SiteHeader from '$lib/components/site-header.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
-<AppBar
-	class="fixed w-screen z-50"
-	gridColumns="grid-cols-3"
-	slotDefault="place-self-center"
-	slotTrail="place-content-end"
->
-	<svelte:fragment slot="lead"
-		><a class="btn" href="/"> <p class="h2">Fabian Tangen</p></a></svelte:fragment
-	>
-	<nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm sm:gap-x-5">
-		<a class="anchor" href="/blog">Blog</a>
-		<a class="anchor" href="/#about">About</a>
-	</nav>
-	<svelte:fragment slot="trail"><div class="mr-3"><LightSwitch /></div></svelte:fragment>
-</AppBar>
+<SiteHeader />
 
 <div class="flex min-h-screen flex-col">
 	<slot />

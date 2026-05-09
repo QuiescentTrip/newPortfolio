@@ -24,7 +24,7 @@
 	);
 </script>
 
-<section class="content pt-24 pb-16">
+<section id="projects" class="content scroll-mt-24 pt-24 pb-16">
 	<div class="container mx-auto min-w-0 px-4 lg:px-8">
 		<h1 class="h1 mb-6 text-center">Websites & Projects</h1>
 

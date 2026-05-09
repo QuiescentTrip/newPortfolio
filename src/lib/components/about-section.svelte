@@ -1,62 +1,71 @@
 <script lang="ts">
-	import skills from '$lib/Skills';
-
 	/** Put your portrait at `static/images/about/me.jpg` (or change path). */
 	const PORTRAIT_SRC = '/images/about/me.jpg';
 
 	let portraitReady = $state(false);
-	let portraitFailed = $state(false);
+
+	const OSLO_TZ = 'Europe/Oslo';
+	const osloTimeFormatter = new Intl.DateTimeFormat('en-GB', {
+		timeZone: OSLO_TZ,
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false
+	});
+	const osloNow = () => {
+		const now = new Date();
+		return { label: osloTimeFormatter.format(now), datetime: now.toISOString() };
+	};
+	const initialOslo = osloNow();
+	let osloTimeLabel = $state(initialOslo.label);
+	let osloTimeDatetime = $state(initialOslo.datetime);
+
+	const langCode =
+		'code chip variant-soft-primary mx-0.5 inline-flex items-baseline px-2 py-0.5 align-baseline text-[0.9em] leading-none';
+
+	$effect(() => {
+		const tick = () => {
+			const next = osloNow();
+			osloTimeLabel = next.label;
+			osloTimeDatetime = next.datetime;
+		};
+		const id = setInterval(tick, 1000);
+		return () => clearInterval(id);
+	});
 </script>
 
-<!-- Replace the `.bio-skeleton` block below with real <p> paragraphs when ready. -->
 <section
 	id="about"
-	class="content relative overflow-x-hidden border-t border-surface-200-700-token py-20 pb-28"
+	class="content relative scroll-mt-24 overflow-x-hidden border-t border-surface-200-700-token py-20 pb-28"
 >
 	<div
 		class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface-50-900-token/0 via-primary-500/5 to-surface-50-900-token/0 dark:via-primary-400/10"
 	></div>
 
 	<div class="container mx-auto max-w-5xl px-4 lg:px-8">
-		<div class="mb-12 text-center lg:text-left">
-			<span class="variant-soft-primary chip mb-3">About</span>
+		<div class="mb-12 text-center lg">
 			<h2 class="h1 text-token">About me</h2>
-			<p class="text-surface-600-300-token mt-2 max-w-2xl text-lg text-balance lg:mx-0 mx-auto">
-				A quick snapshot of who I am and what I like to work with.
-			</p>
 		</div>
 
-		<div class="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
-			<div class="lg:col-span-5">
+		<div
+			class="flex flex-col gap-12 lg:flex-row lg:items-stretch lg:gap-x-16 lg:gap-y-14"
+		>
+			<div class="lg:sticky lg:top-28 lg:w-5/12 lg:max-w-none lg:shrink-0 lg:self-start">
 				<div
-					class="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl shadow-xl ring-2 ring-surface-200-700-token lg:mx-0 lg:max-w-none"
+					class="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl shadow-xl ring-2 ring-surface-200-700-token lg:mx-0 lg:max-w-none"
 				>
-					{#if !portraitFailed}
-						<img
-							src={PORTRAIT_SRC}
-							alt="Portrait"
-							loading="lazy"
-							decoding="async"
-							class="h-full w-full object-cover transition-opacity duration-500 {portraitReady
-								? 'opacity-100'
-								: 'opacity-0'}"
-							onload={() => (portraitReady = true)}
-							onerror={() => (portraitFailed = true)}
-						/>
-					{/if}
-					{#if portraitFailed}
+					<img
+						src={PORTRAIT_SRC}
+						alt="Portrait"
+						loading="lazy"
+						decoding="async"
+						class="h-full w-full object-cover sepia brightness-[0.88] saturate-[0.78] transition-opacity duration-500 {portraitReady
+							? 'opacity-100'
+							: 'opacity-0'}"
+						onload={() => (portraitReady = true)}
+					/>
+					{#if !portraitReady}
 						<div
-							class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-surface-200-700-token/50 to-surface-100-800-token p-6 text-center"
-						>
-							<div class="h-28 w-28 shrink-0 rounded-full bg-surface-200-700-token animate-pulse"></div>
-							<p class="text-sm font-medium opacity-80">Your portrait</p>
-							<p class="text-xs opacity-60">
-								Add an image at <code class="code">static/images/about/me.jpg</code>
-							</p>
-						</div>
-					{:else if !portraitReady}
-						<div
-							class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-200-700-token/40 animate-pulse"
+							class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-200-700-token/40 animate-pulse"
 						>
 							<div class="h-28 w-28 rounded-full bg-surface-100-800-token/50"></div>
 							<div class="h-3 w-32 rounded-full bg-surface-100-800-token/40"></div>
@@ -65,51 +74,42 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-10 lg:col-span-7">
-				<div class="card variant-soft p-6 sm:p-8">
-					<h3 class="h3 mb-6">Story</h3>
-					<div class="bio-skeleton space-y-4" aria-hidden="true">
-						<div
-							class="h-3.5 rounded-full bg-surface-200-700-token/70 animate-pulse"
-							style="width: 100%"
-						></div>
-						<div
-							class="h-3.5 rounded-full bg-surface-200-700-token/60 animate-pulse"
-							style="width: 94%"
-						></div>
-						<div
-							class="h-3.5 rounded-full bg-surface-200-700-token/50 animate-pulse"
-							style="width: 88%"
-						></div>
-						<div
-							class="h-3.5 rounded-full bg-surface-200-700-token/55 animate-pulse"
-							style="width: 72%"
-						></div>
-						<div
-							class="h-3.5 rounded-full bg-surface-200-700-token/45 animate-pulse"
-							style="width: 40%"
-						></div>
-					</div>
-					<p class="text-surface-600-300-token mt-6 text-sm text-balance border-t border-surface-200-700-token pt-6">
-						Replace the pulse lines above with your own paragraphs (remove the
-						<code class="code">.bio-skeleton</code> wrapper).
+			<div class="flex min-h-0 flex-1 flex-col gap-4 lg:min-h-0 lg:w-7/12">
+				<div
+					class="card variant-soft p-6 sm:p-8 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center"
+				>
+					<p class="text-base leading-relaxed">
+						I am Fabian, I love puzzles, music and making/breaking things. I currently reside in Oslo which means my
+						local time is
+						<time class="font-semibold tabular-nums text-primary-500" datetime={osloTimeDatetime}
+							>{osloTimeLabel}</time
+						>.
 					</p>
 				</div>
-
-				<div>
-					<h3 class="h3 mb-4">Skills</h3>
-					<div class="flex flex-col gap-6">
-						{#each Object.entries(skills) as [section, technologies]}
-							<div>
-								<h4 class="mb-2 font-bold capitalize opacity-90">{section}</h4>
-								<div class="flex flex-row flex-wrap gap-2">
-									{#each technologies as technology}
-										<span class="chip variant-soft-primary text-sm">{technology}</span>
-									{/each}
-								</div>
-							</div>
-						{/each}
-					</div>
+				<div
+					class="card variant-soft p-6 sm:p-8 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center"
+				>
+					<p class="text-base leading-relaxed">
+						I specialize in web development, and both on-site and cloud infrastructure. I also do quite enjoy both
+						binary and web hacking.
+					</p>
+				</div>
+				<div
+					class="card variant-soft p-6 sm:p-8 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center"
+				>
+					<p class="text-base leading-relaxed">
+						My favorite language is <code class={langCode}>TypeScript</code>, however recently I have been really
+						liking <code class={langCode}>Go</code> and <code class={langCode}>Rust</code>.
+					</p>
+				</div>
+				<div
+					class="card variant-soft p-6 sm:p-8 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center"
+				>
+					<p class="text-base leading-relaxed">
+						In my free time I do music including live coding on
+						<a href="https://strudel.cc" target="_blank" class="text-primary-500">strudel</a>. As well as a bit of
+						video and photo editing.
+					</p>
 				</div>
 			</div>
 		</div>
