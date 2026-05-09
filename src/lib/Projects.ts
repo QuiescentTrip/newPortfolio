@@ -107,13 +107,13 @@ const projects: ProjectsCollection = {
 			url: 'https://github.com/QuiescentTrip/webapp-social'
 		},
 		{
-			title: '4 Presentation Night',
+			title: 'Presentation Night',
 			technologies: ['Svelte', 'SvelteKBC'],
 			description: 'Fun presentation Website I made in a day for Presentation Night',
 			url: 'https://www.presentationnight.lol/'
 		},
 		{
-			title: 'Repo Transfer Script',
+			title: 'Repo Transfer',
 			technologies: ['Python', 'GitHub-Rest-API'],
 			description:
 				'Script that allows you to transfer all of you repos from one account into another.',

@@ -1,4 +1,7 @@
 <script lang="ts">
+	import ImageWithSkeleton from '$lib/components/image-with-skeleton.svelte';
+	import ScrollFlyIn from '$lib/components/scroll-fly-in.svelte';
+
 	type Achievement = {
 		image: string;
 		alt: string;
@@ -33,12 +36,18 @@
 	const tallAchievement = achievements[3];
 
 	const achievementPhoto =
-		'sepia brightness-[0.88] saturate-[0.78] transition duration-700 ease-out group-hover:scale-[1.04]';
+		'object-cover transition duration-700 ease-out group-hover:scale-[1.04] dark:sepia dark:brightness-[0.88] dark:saturate-[0.78]';
 	const captionLayer =
-		'pointer-events-none absolute inset-0 z-[1] flex items-center justify-center p-3 sm:p-5';
+		'pointer-events-none absolute inset-0 z-[10] flex items-center justify-center p-3 sm:p-5';
 
 	const captionClass =
-		'max-w-[min(92%,26rem)] rounded-none bg-primary-800/75 text-center py-3 px-4 h2 text-white';
+		'max-w-[min(92%,26rem)] rounded-none bg-stone-900/82 py-3 px-4 text-center h2 text-white bg-primary-900/75 dark:bg-primary-800/75';
+
+	/** Pre-reveal shell: dark slab so photo slots read as intentional, not empty. */
+	const achievementReserveShell =
+		'pointer-events-none h-full w-full min-h-0 rounded-xl bg-stone-900/92 animate-pulse dark:bg-black/70';
+
+	const looseBottom = '0px 0px 0px 0px';
 </script>
 
 <section
@@ -50,29 +59,36 @@
 	></div>
 
 	<div class="container mx-auto max-w-6xl px-4 lg:px-8">
-		<div class="mb-12 text-center">
-			<h2 class="h1 text-token">Achievements</h2>
-		</div>
+		<ScrollFlyIn class="mb-12 min-h-[3.5rem] text-center sm:min-h-[4rem]">
+			{#snippet children()}
+				<h2 class="h1 text-token">Achievements</h2>
+			{/snippet}
+		</ScrollFlyIn>
 
 		<div class="flex flex-col gap-4 sm:gap-5 lg:gap-6">
 			{#if heroAchievement}
-				{@const i = 0}
-				<div class="group w-full min-w-0">
-					<div class="relative aspect-[16/6] w-full overflow-hidden rounded-xl sm:aspect-[18/5]">
-							<img
+				<ScrollFlyIn
+					class="group aspect-[16/6] w-full min-w-0 sm:aspect-[18/5]"
+					innerClass="h-full min-h-0 w-full"
+					reservePlaceholderClass={achievementReserveShell}
+					rootMargin={looseBottom}
+					y={26}
+				>
+					{#snippet children()}
+						<div class="relative h-full w-full overflow-hidden rounded-xl">
+							<ImageWithSkeleton
 								src={heroAchievement.image}
 								alt={heroAchievement.alt}
-								loading="lazy"
-								decoding="async"
-								class="h-full w-full object-cover {achievementPhoto}"
+								imgClass={achievementPhoto}
 							/>
-						<div class={captionLayer}>
-							<p class={captionClass}>
-								{heroAchievement.caption}
-							</p>
+							<div class={captionLayer}>
+								<p class={captionClass}>
+									{heroAchievement.caption}
+								</p>
+							</div>
 						</div>
-					</div>
-				</div>
+					{/snippet}
+				</ScrollFlyIn>
 			{/if}
 
 			<div
@@ -80,50 +96,53 @@
 			>
 				<ul class="flex list-none flex-col gap-4 sm:gap-5">
 					{#each pairAchievements as item, j}
-						{@const i = j + 1}
-						<li class="group min-w-0">
-							<div class="relative aspect-[16/10] overflow-hidden rounded-xl">
-									<img
-										src={item.image}
-										alt={item.alt}
-										loading="lazy"
-										decoding="async"
-										class="h-full w-full object-cover {achievementPhoto}"
-									/>
-								<div class={captionLayer}>
-									<p class={captionClass}>
-										{item.caption}
-									</p>
-								</div>
-							</div>
+						<li class="min-w-0 list-none">
+							<ScrollFlyIn
+								class="group aspect-[16/10] min-w-0 w-full"
+								innerClass="h-full min-h-0 w-full"
+								reservePlaceholderClass={achievementReserveShell}
+								delay={j * 60}
+								y={24}
+							>
+								{#snippet children()}
+									<div class="relative h-full w-full overflow-hidden rounded-xl">
+										<ImageWithSkeleton src={item.image} alt={item.alt} imgClass={achievementPhoto} />
+										<div class={captionLayer}>
+											<p class={captionClass}>
+												{item.caption}
+											</p>
+										</div>
+									</div>
+								{/snippet}
+							</ScrollFlyIn>
 						</li>
 					{/each}
 				</ul>
 
 				{#if tallAchievement}
-					{@const i = 3}
-					<div
-						class="group relative min-h-0 w-full max-w-xl justify-self-center sm:max-w-2xl lg:max-w-none lg:justify-self-stretch"
+					<ScrollFlyIn
+						class="group relative aspect-[16/10] w-full min-h-0 min-w-0 lg:aspect-auto lg:h-full lg:min-h-[min(72vh,44rem)] lg:justify-self-stretch"
+						innerClass="h-full min-h-0 w-full"
+						reservePlaceholderClass={achievementReserveShell}
+						delay={90}
+						rootMargin={looseBottom}
+						y={26}
 					>
-						<div class="relative h-full overflow-hidden rounded-xl">
-							<div
-								class="relative aspect-[3/5] w-full sm:aspect-[2/3] lg:aspect-auto lg:h-full lg:min-h-[min(72vh,44rem)]"
-							>
-									<img
-										src={tallAchievement.image}
-										alt={tallAchievement.alt}
-										loading="lazy"
-										decoding="async"
-										class="absolute inset-0 h-full w-full object-cover {achievementPhoto}"
-									/>
+						{#snippet children()}
+							<div class="relative h-full min-h-0 overflow-hidden rounded-xl">
+								<ImageWithSkeleton
+									src={tallAchievement.image}
+									alt={tallAchievement.alt}
+									imgClass={achievementPhoto}
+								/>
+								<div class={captionLayer}>
+									<p class={captionClass}>
+										{tallAchievement.caption}
+									</p>
+								</div>
 							</div>
-							<div class={captionLayer}>
-								<p class={captionClass}>
-									{tallAchievement.caption}
-								</p>
-							</div>
-						</div>
-					</div>
+						{/snippet}
+					</ScrollFlyIn>
 				{/if}
 			</div>
 		</div>

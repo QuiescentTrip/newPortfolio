@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { revealOnScroll } from '$lib/actions/revealOnScroll';
+	import ImageWithSkeleton from '$lib/components/image-with-skeleton.svelte';
 	import type { Project } from '$lib/Projects';
 	import { cubicOut } from 'svelte/easing';
 	import { tick } from 'svelte';
@@ -14,6 +15,9 @@
 	let { project, featured, revealIndex = 0 }: Props = $props();
 
 	let revealed = $state(false);
+	/** Anchor box height while the fly-in body is shown (backgrounds are absolute; this is the laid-out size). */
+	let shellH = $state(0);
+	let reservedShellH = $state(0);
 	let featuredHovered = $state(false);
 	let titleWrapEl: HTMLDivElement | undefined = $state();
 	let featuredTitleEl: HTMLHeadingElement | undefined = $state();
@@ -71,7 +75,7 @@
 	);
 
 	const featuredTitleClass = $derived(
-		`h2 line-clamp-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:left-0 md:top-0 md:z-10 md:transition-transform md:duration-[560ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] ${featuredHovered ? 'md:text-left' : 'md:text-center'} ${project.image ? 'text-white drop-shadow-md' : ''}`
+		`h2 line-clamp-3 pb-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:left-0 md:top-0 md:z-10 md:transition-transform md:duration-[560ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] ${featuredHovered ? 'md:text-left' : 'md:text-center'} ${project.image ? 'text-white drop-shadow-md' : ''}`
 	);
 
 	const descPClass = $derived(
@@ -85,22 +89,34 @@
 	href={project.url}
 	target="_blank"
 	rel="noreferrer"
-	use:revealOnScroll={{ onReveal: () => (revealed = true) }}
+	use:revealOnScroll={{
+		onReveal: () => {
+			reservedShellH = 0;
+			revealed = true;
+		},
+		onLeave: () => {
+			if (shellH > 0) reservedShellH = shellH;
+			revealed = false;
+		}
+	}}
 	onpointerenter={() => {
 		if (featured) featuredHovered = true;
 	}}
 	onpointerleave={() => {
 		featuredHovered = false;
 	}}
+	bind:clientHeight={shellH}
+	style:min-height={!revealed && reservedShellH > 0 ? `${reservedShellH}px` : undefined}
 	class="group card relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xl {spanClass}"
 >
 	{#if project.image}
+		<ImageWithSkeleton
+			src={project.image}
+			alt="{project.title} preview"
+			imgClass="scale-105 filter blur-sm sepia transition-[filter,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:blur-none group-hover:sepia-0"
+		/>
 		<div
-			class="absolute inset-0 scale-105 bg-cover bg-center filter blur-sm sepia transition-[filter,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:blur-none group-hover:sepia-0"
-			style="background-image: url({project.image})"
-		></div>
-		<div
-			class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/45 via-black/55 to-black/75 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:from-black/35 group-hover:to-black/65"
+			class="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-b from-black/45 via-black/55 to-black/75 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:from-black/35 group-hover:to-black/65"
 		></div>
 	{:else}
 		<div

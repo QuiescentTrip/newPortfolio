@@ -1,6 +1,7 @@
 <script lang="ts">
-	import projects, { type Project } from '$lib/Projects';
 	import ProjectBentoCell from '$lib/components/project-bento-cell.svelte';
+	import ScrollFlyIn from '$lib/components/scroll-fly-in.svelte';
+	import projects, { type Project } from '$lib/Projects';
 	import { shuffleDeterministic } from '$lib/shuffleDeterministic';
 
 	const important = projects.important;
@@ -24,9 +25,21 @@
 	);
 </script>
 
-<section id="projects" class="content scroll-mt-24 pt-24 pb-16">
+<section id="projects" class="content relative scroll-mt-24 overflow-x-hidden pt-24 pb-16">
+	<div
+		class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface-50-900-token/0 via-primary-500/5 to-surface-50-900-token/0 dark:via-primary-400/10"
+	></div>
 	<div class="container mx-auto min-w-0 px-4 lg:px-8">
-		<h1 class="h1 mb-6 text-center">Websites & Projects</h1>
+		<ScrollFlyIn class="mb-6 flex min-h-[4rem] justify-center sm:min-h-[4.5rem]">
+			{#snippet children()}
+				<div class="flex flex-col items-center gap-1.5">
+					<h1 class="h1 text-center">Websites & Projects</h1>
+					<p class="text-center text-sm opacity-80 mt-3">
+						Press a box to go to corresponding website page of the project
+					</p>
+				</div>
+			{/snippet}
+		</ScrollFlyIn>
 
 		<div
 			class="grid auto-rows-min grid-cols-2 grid-flow-dense gap-3 min-w-0 md:grid-cols-4 md:gap-4 lg:grid-cols-6"
