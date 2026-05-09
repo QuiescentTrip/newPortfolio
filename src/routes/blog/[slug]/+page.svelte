@@ -4,6 +4,7 @@
 
 	export let data: PageData;
 	let article: Article = data.article;
+	let isReady = false;
 	$: article = data.article;
 	onMount(() => {
 		article.body_html = article.body_html
@@ -14,11 +15,11 @@
 			.replace(/<ul>/g, '<ul class="list-disc list-inside my-4">')
 			.replace(/<li>/g, '<li class="ml-4">')
 			.replace(/<div class="highlight js-code-highlight">/g, '<div class="code">');
-		article.ok = true;
+		isReady = true;
 	});
 </script>
 
-{#if article && article.ok}
+{#if article && isReady}
 	<div class="content overflow-x-hidden overflow-y-scroll pt-40 pb-40">
 		<div
 			class="w-min flex flex-col items-center gap-8 justify-center container mx-auto overflow-x-hidden"

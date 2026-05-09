@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AboutSection from '$lib/components/about-section.svelte';
 	import Projects from '$lib/components/projects.svelte';
 	import Title from '$lib/components/title.svelte';
 </script>
@@ -9,4 +10,5 @@
 <div class="overflow-x-hidden">
 	<Title />
 	<Projects />
+	<AboutSection />
 </div>

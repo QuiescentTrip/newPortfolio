@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	export let data;
 	let devToArticles = data.devToArticles;
 
-	const blackListedArticles = [];
+	const blackListedArticles: Array<string | number> = [];
 
 	const articles = [...devToArticles];
 

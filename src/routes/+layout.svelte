@@ -9,9 +9,6 @@
 	import css from 'highlight.js/lib/languages/css';
 	import javascript from 'highlight.js/lib/languages/javascript';
 	import typescript from 'highlight.js/lib/languages/typescript';
-	import logo from '$lib/assets/logo.svg';
-	import routes from '$lib/NavRoutes';
-	import { page } from '$app/stores';
 	hljs.registerLanguage('xml', xml); // for HTML
 	hljs.registerLanguage('css', css);
 	hljs.registerLanguage('javascript', javascript);
@@ -21,6 +18,7 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup, AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import SiteFooter from '$lib/components/site-footer.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
@@ -33,16 +31,14 @@
 	<svelte:fragment slot="lead"
 		><a class="btn" href="/"> <p class="h2">Fabian Tangen</p></a></svelte:fragment
 	>
-	<div class="gap-4 lg:flex hidden">
-		{#each routes as route}
-			{#if $page.route.id == route.href}
-				<p>{route.label}</p>
-			{:else}
-				<a class="anchor" href={route.href}>{route.label}</a>
-			{/if}
-		{/each}
-	</div>
+	<nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm sm:gap-x-5">
+		<a class="anchor" href="/blog">Blog</a>
+		<a class="anchor" href="/#about">About</a>
+	</nav>
 	<svelte:fragment slot="trail"><div class="mr-3"><LightSwitch /></div></svelte:fragment>
 </AppBar>
 
-<slot />
+<div class="flex min-h-screen flex-col">
+	<slot />
+	<SiteFooter />
+</div>
