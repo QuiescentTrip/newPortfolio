@@ -8,7 +8,7 @@
 <svelte:head>
 	<title>Fabian Ø. Tangen</title>
 </svelte:head>
-<div class="overflow-x-hidden">
+<div class="overflow-x-clip">
 	<Title />
 	<Projects />
 	<AchievementsSection />

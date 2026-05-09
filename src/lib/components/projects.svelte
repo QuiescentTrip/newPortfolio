@@ -25,7 +25,7 @@
 	);
 </script>
 
-<section id="projects" class="content relative scroll-mt-24 overflow-x-hidden pt-24 pb-16">
+<section id="projects" class="content relative scroll-mt-24 overflow-x-clip pt-24 pb-16">
 	<div
 		class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface-50-900-token/0 via-primary-500/5 to-surface-50-900-token/0 dark:via-primary-400/10"
 	></div>

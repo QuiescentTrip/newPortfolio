@@ -9,6 +9,8 @@
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import ImageWithSkeleton from '$lib/components/image-with-skeleton.svelte';
+	import { TITLE_GIF_PATH } from '$lib/preloadPortfolioImages';
 	const email: string = 'bluevs10@hotmail.no';
 	let copy = {
 		text: 'Copy',
@@ -42,7 +44,7 @@
 	<div class="flex flex-col items-center">
 		<div class="flex flex-row">
 			<div class="hidden lg:block">
-				<img src="./images/giphy.gif" alt="dance" />
+				<ImageWithSkeleton src={TITLE_GIF_PATH} alt="dance" layout="intrinsic" />
 			</div>
 
 			<div class="space-y-5 items-center">

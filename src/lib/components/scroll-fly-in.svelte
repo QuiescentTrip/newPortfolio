@@ -2,13 +2,17 @@
 	import type { Snippet } from 'svelte';
 	import { revealOnScroll } from '$lib/actions/revealOnScroll';
 	import { cubicOut } from 'svelte/easing';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
+
+	type RevealMode = 'fly' | 'fade' | 'none';
 
 	type Props = {
 		children: Snippet;
 		delay?: number;
 		y?: number;
 		duration?: number;
+		/** `none` = instant hand-off from reserve shell (no motion pop). */
+		revealMode?: RevealMode;
 		class?: string;
 		/** Classes on the element that runs the fly transition (e.g. flex grow for card bodies). */
 		innerClass?: string;
@@ -25,6 +29,7 @@
 		delay = 0,
 		y = 22,
 		duration = 420,
+		revealMode = 'fly',
 		class: className = '',
 		innerClass = '',
 		rootMargin,
@@ -35,7 +40,7 @@
 
 	const reserveShellClass = $derived(
 		reservePlaceholderClass ||
-			'pointer-events-none h-full w-full min-h-0 rounded-xl animate-pulse bg-surface-200-700-token/30'
+			'pointer-events-none h-full w-full min-h-0 rounded-xl bg-surface-200-700-token/35'
 	);
 
 	let revealed = $state(false);
@@ -67,9 +72,19 @@
 	}}
 >
 	{#if revealed}
-		<div class={innerClass} in:fly={{ y, duration, delay, easing: cubicOut }}>
-			{@render children()}
-		</div>
+		{#if revealMode === 'none'}
+			<div class={innerClass}>
+				{@render children()}
+			</div>
+		{:else if revealMode === 'fade'}
+			<div class={innerClass} in:fade|global={{ duration, delay, easing: cubicOut }}>
+				{@render children()}
+			</div>
+		{:else}
+			<div class={innerClass} in:fly|global={{ y, duration, delay, easing: cubicOut }}>
+				{@render children()}
+			</div>
+		{/if}
 	{:else if showReservePlaceholder}
 		<div class={reserveShellClass} aria-hidden="true"></div>
 	{/if}

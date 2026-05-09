@@ -1,54 +1,91 @@
 <script lang="ts">
+	import {
+		isPortfolioImageFailed,
+		normalizeAssetSrc
+	} from '$lib/preloadPortfolioImages';
+
 	type Props = {
 		src: string;
 		alt: string;
 		imgClass?: string;
-		loading?: 'lazy' | 'eager';
-		skeleton?: 'fill' | 'portrait';
+		/** `fill`: cover parent `relative` box (default). `intrinsic`: natural image size (e.g. title GIF). */
+		layout?: 'fill' | 'intrinsic';
 	};
 
-	let {
-		src,
-		alt,
-		imgClass = '',
-		loading = 'eager',
-		skeleton = 'fill'
-	}: Props = $props();
+	let { src, alt, imgClass = '', layout = 'fill' }: Props = $props();
 
-	let ready = $state(false);
-	let imgEl: HTMLImageElement | undefined = $state();
+	const normalized = $derived(normalizeAssetSrc(src));
+	const failedPreload = $derived(isPortfolioImageFailed(normalized));
 
-	$effect(() => {
-		src;
-		ready = false;
-	});
+	let loaded = $state(false);
+	let runtimeFailed = $state(false);
 
-	$effect(() => {
-		if (imgEl?.complete && imgEl.naturalHeight > 0) ready = true;
-	});
+	const showBroken = $derived(failedPreload || runtimeFailed);
+
+	function onLoad(e: Event) {
+		const el = e.currentTarget;
+		if (!(el instanceof HTMLImageElement)) return;
+		el.decode().then(() => {
+			loaded = true;
+		}).catch(() => {
+			loaded = true;
+		});
+	}
+
+	function onError() {
+		runtimeFailed = true;
+	}
+
+	const fillShell = 'absolute inset-0 min-h-0 min-w-0';
+	const placeholderClass = 'bg-surface-200-700-token/25';
 </script>
 
-{#if skeleton === 'portrait' && !ready}
-	<div
-		class="pointer-events-none absolute inset-0 z-[1] flex flex-col items-center justify-center gap-3 bg-surface-200-700-token/60 animate-pulse"
-	>
-		<div class="h-28 w-28 rounded-full bg-surface-100-800-token/60"></div>
-		<div class="h-3 w-32 rounded-full bg-surface-100-800-token/50"></div>
+{#if layout === 'fill'}
+	<div class={fillShell}>
+		<div class="{fillShell} {placeholderClass}" aria-hidden="true"></div>
+		{#if !showBroken}
+			<img
+				src={normalized}
+				alt={loaded ? alt : ''}
+				aria-hidden={loaded ? undefined : true}
+				loading="eager"
+				decoding="async"
+				onload={onLoad}
+				onerror={onError}
+				class="absolute inset-0 h-full w-full object-cover transition-[filter,transform,opacity] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] {loaded
+					? 'opacity-100'
+					: 'opacity-0'} {imgClass}"
+			/>
+		{/if}
 	</div>
-{:else if skeleton === 'fill' && !ready}
-	<div
-		class="pointer-events-none absolute inset-0 z-[1] bg-surface-200-700-token/55 animate-pulse"
-	></div>
+{:else}
+	{#if showBroken}
+		<div
+			class="inline-block min-h-[12rem] min-w-[12rem] rounded-lg {placeholderClass}"
+			aria-hidden="true"
+		></div>
+	{:else}
+		<div
+			class="inline-grid [grid-template-areas:'stack'] justify-items-center align-middle"
+		>
+			<div
+				class="[grid-area:stack] min-h-[12rem] min-w-[12rem] rounded-lg {placeholderClass} transition-opacity duration-300 {loaded
+					? 'opacity-0'
+					: 'opacity-100'}"
+				aria-hidden="true"
+			></div>
+			<img
+				src={normalized}
+				alt={loaded ? alt : ''}
+				aria-hidden={loaded ? undefined : true}
+				loading="eager"
+				decoding="async"
+				onload={onLoad}
+				onerror={onError}
+				class="[grid-area:stack] relative z-[1] h-auto w-auto max-h-[min(24rem,70vh)] object-contain transition-opacity duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] {loaded
+					? 'opacity-100'
+					: 'opacity-0'} {imgClass}"
+			/>
+		</div>
+	{/if}
 {/if}
-<img
-	bind:this={imgEl}
-	{src}
-	{alt}
-	{loading}
-	decoding="async"
-	class="absolute inset-0 z-[2] h-full w-full object-cover transition-opacity duration-500 {imgClass} {ready
-		? 'opacity-100'
-		: 'opacity-0'}"
-	onload={() => (ready = true)}
-	onerror={() => (ready = true)}
-/>

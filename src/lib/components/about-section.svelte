@@ -26,10 +26,10 @@
 	const portraitFilter = 'dark:sepia dark:brightness-[0.88] dark:saturate-[0.78]';
 
 	const cardReserveShell =
-		'pointer-events-none h-full w-full min-h-0 animate-pulse bg-surface-200-700-token/20';
+		'pointer-events-none h-full w-full min-h-0 bg-surface-200-700-token/25';
 
 	const portraitReserveShell =
-		'pointer-events-none h-full w-full min-h-0 rounded-2xl bg-stone-900/92 animate-pulse dark:bg-black/70';
+		'pointer-events-none h-full w-full min-h-0 rounded-2xl bg-surface-200-700-token/25';
 
 	$effect(() => {
 		const tick = () => {
@@ -44,7 +44,7 @@
 
 <section
 	id="about"
-	class="content relative scroll-mt-24 overflow-x-hidden border-t border-surface-200-700-token py-20 pb-28"
+	class="content relative scroll-mt-24 overflow-x-clip border-t border-surface-200-700-token py-20 pb-28"
 >
 	<div
 		class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface-50-900-token/0 via-primary-500/5 to-surface-50-900-token/0 dark:via-primary-400/10"
@@ -68,12 +68,11 @@
 				>
 					{#snippet children()}
 						<div
-							class="relative h-full w-full overflow-hidden rounded-2xl shadow-xl ring-2 ring-surface-200-700-token"
+							class="relative h-full w-full overflow-hidden rounded-2xl shadow-xl "
 						>
 							<ImageWithSkeleton
 								src={PORTRAIT_SRC}
 								alt="Portrait"
-								skeleton="portrait"
 								imgClass={portraitFilter}
 							/>
 						</div>

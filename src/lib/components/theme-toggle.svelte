@@ -47,7 +47,7 @@
 	onkeydown={onKeydown}
 >
 	<span
-		class="pointer-events-none absolute top-1/2 left-0.5 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-stone-500/25 bg-stone-100 shadow-md transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] dark:border-stone-600/50 dark:bg-stone-800 dark:shadow-black/40 {$modeCurrent
+		class="pointer-events-none absolute left-[2px] top-[13px] flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-stone-500/25 bg-stone-100 shadow-md transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] dark:border-stone-600/50 dark:bg-stone-800 dark:shadow-black/40 {$modeCurrent
 			? 'translate-x-[1.125rem]'
 			: 'translate-x-0'}"
 	>

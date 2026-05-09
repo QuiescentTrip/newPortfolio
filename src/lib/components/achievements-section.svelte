@@ -36,32 +36,36 @@
 	const tallAchievement = achievements[3];
 
 	const achievementPhoto =
-		'object-cover transition duration-700 ease-out group-hover:scale-[1.04] dark:sepia dark:brightness-[0.88] dark:saturate-[0.78]';
+		'object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] dark:sepia dark:brightness-[0.88] dark:saturate-[0.78]';
 	const captionLayer =
 		'pointer-events-none absolute inset-0 z-[10] flex items-center justify-center p-3 sm:p-5';
 
 	const captionClass =
 		'max-w-[min(92%,26rem)] rounded-none bg-stone-900/82 py-3 px-4 text-center h2 text-white bg-primary-900/75 dark:bg-primary-800/75';
 
-	/** Pre-reveal shell: dark slab so photo slots read as intentional, not empty. */
 	const achievementReserveShell =
-		'pointer-events-none h-full w-full min-h-0 rounded-xl bg-stone-900/92 animate-pulse dark:bg-black/70';
+		'pointer-events-none h-full w-full min-h-0 rounded-xl bg-surface-200-700-token/25';
 
 	const looseBottom = '0px 0px 0px 0px';
 </script>
 
 <section
 	id="achievements"
-	class="content relative scroll-mt-24 overflow-x-hidden border-t border-surface-200-700-token py-20"
+	class="content relative scroll-mt-24 overflow-x-clip border-t border-surface-200-700-token py-20"
 >
 	<div
 		class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-surface-50-900-token/0 via-primary-500/5 to-surface-50-900-token/0 dark:via-primary-400/10"
 	></div>
 
 	<div class="container mx-auto max-w-6xl px-4 lg:px-8">
-		<ScrollFlyIn class="mb-12 min-h-[3.5rem] text-center sm:min-h-[4rem]">
+		<ScrollFlyIn class="mb-4 min-h-[5.5rem] text-center sm:min-h-[6rem]">
 			{#snippet children()}
 				<h2 class="h1 text-token">Achievements</h2>
+				<p
+					class="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-token/70 sm:text-[0.9375rem]"
+				>
+					Not really achievements, but rather something I'm personally proud of
+				</p>
 			{/snippet}
 		</ScrollFlyIn>
 

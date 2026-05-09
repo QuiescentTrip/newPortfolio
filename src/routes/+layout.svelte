@@ -18,10 +18,13 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+	import AppLoadGate from '$lib/components/app-load-gate.svelte';
 	import SiteFooter from '$lib/components/site-footer.svelte';
 	import SiteHeader from '$lib/components/site-header.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
+
+<AppLoadGate />
 
 <SiteHeader />
 

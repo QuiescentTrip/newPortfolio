@@ -8,7 +8,8 @@ type RevealParams = {
 
 /** Single non-zero thresholds often chatter at the visibility edge; 0 = any overlap counts as visible. */
 const DEFAULT_THRESHOLD = 0;
-const DEFAULT_ROOT_MARGIN = '0px 0px -5% 0px';
+/** Match the real viewport; a negative bottom inset caused `onLeave` while the node was still visible when scrolling up. */
+const DEFAULT_ROOT_MARGIN = '0px';
 
 export function revealOnScroll(node: HTMLElement, params: RevealParams = {}) {
 	let onReveal = params.onReveal;

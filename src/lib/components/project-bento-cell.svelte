@@ -3,7 +3,6 @@
 	import ImageWithSkeleton from '$lib/components/image-with-skeleton.svelte';
 	import type { Project } from '$lib/Projects';
 	import { cubicOut } from 'svelte/easing';
-	import { tick } from 'svelte';
 	import { fly } from 'svelte/transition';
 
 	type Props = {
@@ -18,43 +17,6 @@
 	/** Anchor box height while the fly-in body is shown (backgrounds are absolute; this is the laid-out size). */
 	let shellH = $state(0);
 	let reservedShellH = $state(0);
-	let featuredHovered = $state(false);
-	let titleWrapEl: HTMLDivElement | undefined = $state();
-	let featuredTitleEl: HTMLHeadingElement | undefined = $state();
-	/** Pixel offset to vertically center featured title (md+); avoids `top: 50%` while the wrap height changes. */
-	let featuredTitleCenterY = $state(0);
-
-	function measureFeaturedTitleCenter() {
-		if (!featured || !titleWrapEl || !featuredTitleEl || featuredHovered) return;
-		if (typeof window === 'undefined' || window.innerWidth < 768) {
-			featuredTitleCenterY = 0;
-			return;
-		}
-		const wrapH = titleWrapEl.clientHeight;
-		const titleH = featuredTitleEl.offsetHeight;
-		featuredTitleCenterY = Math.max(0, (wrapH - titleH) / 2);
-	}
-
-	$effect(() => {
-		if (!featured) {
-			featuredHovered = false;
-			featuredTitleCenterY = 0;
-		}
-	});
-
-	$effect(() => {
-		if (!featured || !revealed || !titleWrapEl) return;
-		const ro = new ResizeObserver(() => {
-			if (!featuredHovered) measureFeaturedTitleCenter();
-		});
-		ro.observe(titleWrapEl);
-		return () => ro.disconnect();
-	});
-
-	$effect(() => {
-		if (!featured || !revealed || featuredHovered) return;
-		tick().then(measureFeaturedTitleCenter);
-	});
 
 	const spanClass = $derived(
 		featured
@@ -64,18 +26,18 @@
 
 	const titleWrapClass = $derived(
 		featured
-			? 'relative flex min-h-0 w-full flex-1 flex-col max-md:items-start max-md:justify-start md:block'
+			? 'relative flex min-h-0 w-full min-w-0 flex-1 flex-col max-md:items-start max-md:justify-start md:block'
 			: 'flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:items-start max-md:justify-start md:group-hover:flex-none md:group-hover:max-h-0 md:group-hover:opacity-0 md:group-hover:overflow-hidden'
 	);
 
 	const descOuterClass = $derived(
 		featured
-			? `grid translate-y-0 opacity-100 transition-[grid-template-rows,opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid-rows-[1fr] max-md:translate-y-0 max-md:opacity-100 ${featuredHovered ? 'md:grid-rows-[1fr] md:translate-y-0 md:opacity-100' : 'md:grid-rows-[0fr] md:translate-y-1 md:opacity-0'}`
+			? 'translate-y-0 opacity-100 duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid max-md:grid-rows-[1fr] max-md:translate-y-0 max-md:opacity-100 max-md:transition-[grid-template-rows,opacity,transform] md:absolute md:bottom-4 md:left-4 md:right-4 md:z-20 md:max-h-0 md:translate-y-3 md:opacity-0 md:overflow-hidden md:transition-[max-height,opacity,transform] md:group-hover:max-h-[min(28rem,70vh)] md:group-hover:translate-y-0 md:group-hover:opacity-100'
 			: 'grid translate-y-0 opacity-100 transition-[grid-template-rows,opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] max-md:grid-rows-[1fr] md:grid-rows-[0fr] md:translate-y-1 md:opacity-0 md:group-hover:grid-rows-[1fr] md:group-hover:translate-y-0 md:group-hover:opacity-100'
 	);
 
 	const featuredTitleClass = $derived(
-		`h2 line-clamp-3 pb-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:left-0 md:top-0 md:z-10 md:transition-transform md:duration-[560ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] ${featuredHovered ? 'md:text-left' : 'md:text-center'} ${project.image ? 'text-white drop-shadow-md' : ''}`
+		`h2 line-clamp-3 pb-3 w-full max-w-full px-1 text-center max-md:text-left md:absolute md:inset-x-0 md:top-0 md:z-10 md:mx-auto md:w-fit md:max-w-full md:translate-y-[calc(50cqh-50%)] md:text-center md:transition-[margin,transform] md:duration-[420ms] md:ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:right-auto md:group-hover:mx-0 md:group-hover:translate-y-0 md:group-hover:text-left ${project.image ? 'text-white drop-shadow-md' : ''}`
 	);
 
 	const descPClass = $derived(
@@ -99,12 +61,6 @@
 			revealed = false;
 		}
 	}}
-	onpointerenter={() => {
-		if (featured) featuredHovered = true;
-	}}
-	onpointerleave={() => {
-		featuredHovered = false;
-	}}
 	bind:clientHeight={shellH}
 	style:min-height={!revealed && reservedShellH > 0 ? `${reservedShellH}px` : undefined}
 	class="group card relative flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xl {spanClass}"
@@ -113,10 +69,10 @@
 		<ImageWithSkeleton
 			src={project.image}
 			alt="{project.title} preview"
-			imgClass="scale-105 filter blur-sm sepia transition-[filter,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:blur-none group-hover:sepia-0"
+			imgClass="scale-105 filter blur-sm sepia group-hover:scale-100 group-hover:blur-none group-hover:sepia-0"
 		/>
 		<div
-			class="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-b from-black/45 via-black/55 to-black/75 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:from-black/35 group-hover:to-black/65"
+			class="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-b from-black/45 via-black/55 to-black/75 transition-all duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:from-black/35 group-hover:to-black/65"
 		></div>
 	{:else}
 		<div
@@ -126,18 +82,14 @@
 
 	{#if revealed}
 		<div
-			class="relative z-10 flex h-full min-h-0 flex-1 flex-col p-3 sm:p-4 {project.image ? 'text-white' : 'text-token'}"
-			in:fly={{ y: 18, duration: 400, delay: revealIndex * 55, easing: cubicOut }}
+			class="relative z-10 flex h-full min-h-0 min-w-0 flex-1 flex-col p-3 sm:p-4 [container-type:size] {project.image
+				? 'text-white'
+				: 'text-token'}"
+			in:fly|global={{ x: 0, y: 20, duration: 400, delay: revealIndex * 55, easing: cubicOut }}
 		>
-			<div class={titleWrapClass} bind:this={titleWrapEl}>
+			<div class={titleWrapClass}>
 				{#if featured}
-					<h2
-						class={featuredTitleClass}
-						bind:this={featuredTitleEl}
-						style:transform="translateY({featuredHovered ? 0 : featuredTitleCenterY}px)"
-					>
-						{project.title}
-					</h2>
+					<h2 class={featuredTitleClass}>{project.title}</h2>
 				{:else}
 					<h3
 						class="h3 line-clamp-3 max-w-full px-1 text-center max-md:text-left transition-[margin,transform,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] {project.image
